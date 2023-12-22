@@ -69,6 +69,132 @@ go
 INPUT
 }
 
+hhaxisprep()
+{
+vsql << INPUT
+drop table tempdb..bdschi_poc2_age
+drop table tempdb..bdschi_poc2_bdl
+go
+INPUT
+vsql << INPUT
+select value_id, name into tempdb..bdschi_poc2_age from gfkvalues, names where name_id=value_id and valid_flag=1 and language_id=2 and feature_id=8319588
+go
+alter table tempdb..bdschi_poc2_age add postext varchar(30) NULL
+go
+update tempdb..bdschi_poc2_age set postext='Young Adults' where name in ('bis 19 Jahre', '20-24 Jahre', '25-29 Jahre')
+update tempdb..bdschi_poc2_age set postext='Under 50' where name in ('30-34 Jahre', '35-39 Jahre', '40-44 Jahre', '45-49 Jahre')
+update tempdb..bdschi_poc2_age set postext='Over 50' where name in ('50-54 Jahre', '55-59 Jahre', '60-64 Jahre', '65-69 Jahre', '70 Jahre und älter')                      
+select * from tempdb..bdschi_poc2_age
+go
+select value_id, name into tempdb..bdschi_poc2_bdl from gfkvalues, names where name_id=value_id and valid_flag=1 and language_id=2 and feature_id=8319491
+go
+alter table tempdb..bdschi_poc2_bdl add postext varchar(30) NULL
+go
+update tempdb..bdschi_poc2_bdl set postext='Nord' where name in ('Schleswig-Holstein', 'Niedersachsen', 'Hamburg', 'Bremen')
+update tempdb..bdschi_poc2_bdl set postext='NRW' where name in ('Nordrhein-Westfalen')
+update tempdb..bdschi_poc2_bdl set postext='Mitte' where name in ('Saarland','Rheinland-Pfalz', 'Hessen')
+update tempdb..bdschi_poc2_bdl set postext='Ost' where name in ('Sachsen/Anhalt', 'Sachsen', 'Thüringen', 'Mecklenburg', 'Brandenburg')
+update tempdb..bdschi_poc2_bdl set postext='BW' where name in ('Baden-Württemberg')
+update tempdb..bdschi_poc2_bdl set postext='BAY' where name in ('Bayern')
+update tempdb..bdschi_poc2_bdl set postext='BER' where name in ('Berlin', 'Berlin-West')
+select * from tempdb..bdschi_poc2_bdl
+go
+INPUT
+}
+
+hhaxis()
+{
+vsql << INPUT | sed 's/^	//;s/	$//;s/ *	/	/g;s/	 */	/g;s/^ *//'
+select abdl.value_id bdl_id, nbdl.name, aage.value_id age_id, nage.name, tage.postext, hash(tbdl.postext+tage.postext) pos_id, hash(tbdl.postext) parent_id
+from gfkvalues abdl, gfkvalues aage, names  nbdl, names nage, tempdb..bdschi_poc2_age tage, tempdb..bdschi_poc2_bdl tbdl
+where nage.name_id=aage.value_id
+and nbdl.name_id=abdl.value_id
+and aage.feature_id=8319588
+and abdl.feature_id=8319491
+and nage.valid_flag=1 and nage.language_id=2
+and nbdl.valid_flag=1 and nbdl.language_id=2
+and tage.value_id=nage.name_id
+and tbdl.value_id=nbdl.name_id
+group by abdl.value_id, aage.value_id, nbdl.name, nage.name, tage.postext, tbdl.postext
+go
+select abdl.value_id bdl_id, nbdl.name, aage.value_id age_id, nage.name, tbdl.postext, hash(tbdl.postext) pos_id, hash('TOTAL') parent_id
+from gfkvalues abdl, gfkvalues aage, names  nbdl, names nage, tempdb..bdschi_poc2_age tage, tempdb..bdschi_poc2_bdl tbdl
+where nage.name_id=aage.value_id
+and nbdl.name_id=abdl.value_id
+and aage.feature_id=8319588
+and abdl.feature_id=8319491
+and nage.valid_flag=1 and nage.language_id=2
+and nbdl.valid_flag=1 and nbdl.language_id=2
+and tage.value_id=nage.name_id
+and tbdl.value_id=nbdl.name_id
+group by abdl.value_id, aage.value_id, nbdl.name, nage.name, tage.postext, tbdl.postext
+go
+select abdl.value_id bdl_id, nbdl.name, aage.value_id age_id, nage.name, 'TOTAL', hash('TOTAL') pos_id, NULL parent_id
+from gfkvalues abdl, gfkvalues aage, names  nbdl, names nage, tempdb..bdschi_poc2_age tage, tempdb..bdschi_poc2_bdl tbdl
+where nage.name_id=aage.value_id
+and nbdl.name_id=abdl.value_id
+and aage.feature_id=8319588
+and abdl.feature_id=8319491
+and nage.valid_flag=1 and nage.language_id=2
+and nbdl.valid_flag=1 and nbdl.language_id=2
+and tage.value_id=nage.name_id
+and tbdl.value_id=nbdl.name_id
+group by abdl.value_id, aage.value_id, nbdl.name, nage.name, tage.postext, tbdl.postext
+go
+INPUT
+}
+
+artaxis()
+{
+vsql << INPUT | sed 's/^	//;s/	$//;s/ *	/	/g;s/	 */	/g;s/^ *//'
+
+select ncat.name_id cat_id, ncat.name, abrnd.feature_value brnd_id, nbrnd.name, nbrnd.name, hash(ncat.name+nbrnd.name) pos_id, hash(ncat.name) parent_id
+from objects ocat, assign_2020930 abrnd, names ncat, names nbrnd, objects o
+where nbrnd.name_id=abrnd.feature_value
+and abrnd.object_id=o.object_id
+and o.parent_id=ocat.object_id
+and nbrnd.valid_flag=1 and nbrnd.language_id=2
+and ncat.valid_flag=1 and ncat.language_id=2
+and ncat.object_sort=3
+and ncat.object_type=2
+and ocat.object_id=ncat.name_id
+and ocat.cat_id=3
+and ocat.class_flag=1
+group by ncat.name_id, abrnd.feature_value, ncat.name, nbrnd.name
+go
+
+select ncat.name_id cat_id, ncat.name, abrnd.feature_value brnd_id, nbrnd.name, ncat.name, hash(ncat.name) pos_id, hash('TOTALA') parent_id
+from objects ocat, assign_2020930 abrnd, names ncat, names nbrnd, objects o
+where nbrnd.name_id=abrnd.feature_value
+and abrnd.object_id=o.object_id
+and o.parent_id=ocat.object_id
+and nbrnd.valid_flag=1 and nbrnd.language_id=2
+and ncat.valid_flag=1 and ncat.language_id=2
+and ncat.object_sort=3
+and ncat.object_type=2
+and ocat.object_id=ncat.name_id
+and ocat.cat_id=3
+and ocat.class_flag=1
+group by ncat.name_id, abrnd.feature_value, ncat.name, nbrnd.name
+go
+
+select ncat.name_id cat_id, ncat.name, abrnd.feature_value brnd_id, nbrnd.name, 'TOTAL', hash('TOTALA') pos_id, NULL parent_id
+from objects ocat, assign_2020930 abrnd, names ncat, names nbrnd, objects o
+where nbrnd.name_id=abrnd.feature_value
+and abrnd.object_id=o.object_id
+and o.parent_id=ocat.object_id
+and nbrnd.valid_flag=1 and nbrnd.language_id=2
+and ncat.valid_flag=1 and ncat.language_id=2
+and ncat.object_sort=3
+and ncat.object_type=2
+and ocat.object_id=ncat.name_id
+and ocat.cat_id=3
+and ocat.class_flag=1
+group by ncat.name_id, abrnd.feature_value, ncat.name, nbrnd.name
+go
+INPUT
+}
+
 names()
 {
 vsql << INPUT
@@ -90,6 +216,9 @@ INPUT
 
 #purchases
 #weights
+hhaxis > hhaxis.txt
+artaxis > artaxis.txt
+exit
 
 rm hh.txt
 for year in 2017 2018
