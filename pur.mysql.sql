@@ -20,8 +20,7 @@ rw REAL
 );
 -- Load the data from a text file into the table
 LOAD DATA INFILE 'pur.txt' INTO TABLE purchases
-FIELDS TERMINATED BY '\t'
-LINES TERMINATED BY '\n';
+FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 -- Turn on the headers for the output
 SET SQL_MODE = 'ANSI';
 -- Select the first 10 rows from the table
