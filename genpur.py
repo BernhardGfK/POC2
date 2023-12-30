@@ -89,9 +89,9 @@ for i in range(0, hhnr):
                 print(article[j], end='\t', file=purfile)
             else:
                 print("NULL", end='\t', file=purfile)
-        bf=nr*round(2**random.uniform(-1,3),2)
+        bf=2**random.uniform(-1,1)
         print(bf, end='\t', file=purfile)
-        rw=nr*round(2**random.uniform(-1,3),2)
+        rw=2**random.uniform(-1,1)
         print(rw, file=purfile)
 purfile.close()
 
