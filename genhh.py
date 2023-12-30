@@ -1,13 +1,6 @@
 import random
+import config.py
 
-#config begin
-bdl={1: 0.2, 2: 0.2, 3: 0.2, 4: 0.2, 5: 0.2}
-age={11:0.1, 12:0.1, 13:0.1, 14:0.1, 15:0.1, 16:0.1, 17:0.1, 18:0.1, 19:0.1, 20:0.1}
-id=21
-hhfeatstdnr=5
-hhfeatnr=10
-hhnr=10
-# config end
 hhfile=open("hh.txt", "w")
 hhfeat=[bdl, age]
 for i in range(2, hhfeatnr):

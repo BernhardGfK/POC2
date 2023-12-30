@@ -1,12 +1,12 @@
 from datetime import date, timedelta
 import random
 import calendar
+import config
 
 def daterange(start_date, end_date, length=1):
     for n in range(0, int((end_date - start_date).days), length):
         yield start_date + timedelta(n)
 
-hhnr=10
 filewgts = open("wgt.txt", "w")
 firsthhid=68
 id=firsthhid

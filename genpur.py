@@ -1,15 +1,7 @@
 import random
 from datetime import date, timedelta
+import config
 
-#config begin
-artfeatnr=10
-featperpg=5
-pgcnt=10
-artcnt=100
-maxrecperhh=1000
-shopcnt=10
-# config end
-hhnr=10
 start_date = date(2017, 1, 1)
 end_date = date(2019, 12, 31)
 plen=int((end_date - start_date).days)
