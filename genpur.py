@@ -5,13 +5,12 @@ import config
 start_date = date(2017, 1, 1)
 end_date = date(2019, 12, 31)
 plen=int((end_date - start_date).days)
-firsthhid=68
-id=firsthhid+hhnr
+id=config.firsthhid+config.hhnr
 purfile=open("pur.txt", "w")
 artfeat=[]
-for i in range(artfeatnr):
+for i in range(config.artfeatnr):
     if i==0:
-        nrnv=pgcnt
+        nrnv=config.pgcnt
     else:
         nrnv=random.randint(1, 10)
     s=0
@@ -26,12 +25,12 @@ for i in range(artfeatnr):
     artfeat.append(feat)
 
 pgfeat=[]
-for ipg in range(0, pgcnt):
-    pgfeat.append([1]+random.sample(range(2, artfeatnr), featperpg))
+for ipg in range(0, config.pgcnt):
+    pgfeat.append([1]+random.sample(range(2, config.artfeatnr), config.featperpg))
 
 firstshopid=id
 articles=[]
-for i in range(0, artcnt):
+for i in range(0, config.artcnt):
     article={}
     vp=random.uniform(0, 1)
     s=0
@@ -57,25 +56,25 @@ for i in range(0, artcnt):
     articles.append(article)
 
 recid=1000
-for i in range(0, hhnr):
-    print("hh %d\n" % (i+firsthhid))
-    nrrec=random.randint(1, maxrecperhh)
+for i in range(0, config.hhnr):
+    print("hh %d\n" % (i+config.firsthhid))
+    nrrec=random.randint(1, config.maxrecperhh)
     for k in range(0, nrrec):
         print(recid, end='\t', file=purfile)
         recid+=1
-        print(i+firsthhid, end='\t', file=purfile)
+        print(i+config.firsthhid, end='\t', file=purfile)
         date=start_date+timedelta(days=random.randint(0, plen))
         print(date, end='\t', file=purfile)
-        shop=random.randint(firstshopid, firstshopid+shopcnt)
+        shop=random.randint(firstshopid, firstshopid+config.shopcnt)
         print(shop, end='\t', file=purfile)
         nr=round(2**random.uniform(-1,5))
         print(nr, end='\t', file=purfile)
         val=nr*round(2**random.uniform(-1,5),2)
         print(val, end='\t', file=purfile)
-        article=articles[random.randint(0, artcnt-1)]
+        article=articles[random.randint(0, config.artcnt-1)]
         vol=nr*article[-1]
         print(vol, end='\t', file=purfile)
-        for j in range(0, artfeatnr):
+        for j in range(0, config.artfeatnr):
             if j in article:
                 print("%d %d\n" % (j, article[j]))
                 print(article[j], end='\t', file=purfile)
@@ -99,7 +98,7 @@ print("\tvalue float,", file=pursql)
 print("\tvolume float,", file=pursql)
 print("\tcategory_id int,", file=pursql)
 print("\tbrand_id int,", file=pursql)
-for i in range(2, artfeatnr):
+for i in range(2, config.artfeatnr):
     print("\tfeat"+str(i)+"_id int default null,", file=pursql)
 print("\tbrand_factor float,", file=pursql)
 print("\trw float);", file=pursql)

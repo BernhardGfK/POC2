@@ -1,9 +1,10 @@
 import random
-import config.py
+import config
 
+id=config.startid
 hhfile=open("hh.txt", "w")
-hhfeat=[bdl, age]
-for i in range(2, hhfeatnr):
+hhfeat=[config.bdl, config.age]
+for i in range(2, config.hhfeatnr):
     nrnv=random.randint(1, 10)
     #print("number of hhfeat values: ", nrnv)
     s=0
@@ -20,12 +21,12 @@ for i in range(2, hhfeatnr):
 
 firsthhid=id
 for validdate in ("2017-01-01", "2018-01-01", "2019-01-01"):
-    for j in range(0, hhnr):
+    for j in range(0, config.hhnr):
         print(id, end='\t', file=hhfile)
         print("household: ", j, id)
         id+=1
-        for i in range(0, hhfeatnr):
-            if i>=hhfeatstdnr and random.uniform(0, 1)<0.9:
+        for i in range(0, config.hhfeatnr):
+            if i>=config.hhfeatstdnr and random.uniform(0, 1)<0.9:
                 print("NULL", file=hhfile, end='\t')
                 continue
             vp=random.uniform(0, 1)
@@ -45,8 +46,8 @@ print("create table households (", file=hhsql)
 print("\thousehold_id int,", file=hhsql)
 print("\tbdl_id int,", file=hhsql)
 print("\tage_id int,", file=hhsql)
-for i in range(2, hhfeatnr):
-    if i>=hhfeatstdnr:
+for i in range(2, config.hhfeatnr):
+    if i>=config.hhfeatstdnr:
         print("\tfeat"+str(i)+"_id int default null,", file=hhsql)
     else:
         print("\tfeat"+str(i)+"_id int,", file=hhsql)
@@ -58,8 +59,8 @@ print("select * from households limit 10;", file=hhsql)
 hhsql.close()
 
 hhaxfile=open("hhaxis.txt", "w")
-for b in bdl:
-    for a in age:
+for b in config.bdl:
+    for a in config.age:
         print(b, b, a, a, a, a, b, sep='\t', file=hhaxfile)
         print(b, b, a, a, b, b, "TOTAL", sep='\t', file=hhaxfile)
         print(b, b, a, a, "TOTAL", "TOTAL", "NULL", sep='\t', file=hhaxfile)
