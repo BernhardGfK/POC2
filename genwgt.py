@@ -21,7 +21,7 @@ for single_date in daterange(start_date, end_date, 7):
         w[j]=random.uniform(0, 1)
         s+=w[j]
     for j in range(0, hhnr):
-        print(firsthhid+j, single_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), w[j]/s, 1, sep='\t', file=filewgts)
+        print(firsthhid+j, single_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), w[j]/s*hhnr, 1, sep='\t', file=filewgts)
 for byear in range(2017, 2020):
     for bmonth in range(1, 13):
         for eyear in range(byear, 2020):
@@ -40,7 +40,7 @@ for byear in range(2017, 2020):
                     w[j]=random.uniform(0, 1)
                     s+=w[j]
                 for j in range(0, hhnr):
-                    print(firsthhid+j, begin, end, w[j]/s, 0, sep='\t', file=filewgts)
+                    print(firsthhid+j, begin, end, w[j]/s*hhnr, 0, sep='\t', file=filewgts)
 filewgts.close()
 
 wgtsql=open("wgt.sql", "w")
