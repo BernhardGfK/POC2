@@ -35,7 +35,7 @@ for i in range(artfeatnr):
 
 pgfeat=[]
 for ipg in range(0, pgcnt):
-    pgfeat.append(random.sample(range(0, artfeatnr), featperpg))
+    pgfeat.append([1]+random.sample(range(2, artfeatnr), featperpg))
 
 firstshopid=id
 articles=[]
@@ -51,7 +51,6 @@ for i in range(0, artcnt):
         ipg+=1
     article[0]=val
     print("article %d: pg %d" % (i, val))
-    #for ifeat in pgfeat[ipg]:
     for ifeat in pgfeat[ipg]:
         vp=random.uniform(0, 1)
         s=0
@@ -106,7 +105,9 @@ print("\tshop_id int,", file=pursql)
 print("\tpacks int,", file=pursql)
 print("\tvalue float,", file=pursql)
 print("\tvolume float,", file=pursql)
-for i in range(0, artfeatnr):
+print("\tcategory_id int,", file=pursql)
+print("\tbrand_id int,", file=pursql)
+for i in range(2, artfeatnr):
     print("\tfeat"+str(i)+"_id int default null,", file=pursql)
 print("\tbrand_factor float,", file=pursql)
 print("\trw float);", file=pursql)
@@ -115,3 +116,26 @@ print(".import pur.txt purchases", file=pursql)
 print(".headers on", file=pursql)
 print("select * from purchases limit 10;", file=pursql)
 pursql.close()
+
+artaxfile=open("artaxis.txt", "w")
+for article in articles:
+	print(article[0], article[0], article[1], article[1], article[1], article[1], article[0], sep='\t', file=artaxfile)
+	print(article[0], article[0], article[1], article[1], article[0], article[0], "TOTAL", sep='\t', file=artaxfile)
+	print(article[0], article[0], article[1], article[1], "TOTAL", "TOTAL", "NULL", sep='\t', file=artaxfile)
+artaxfile.close()
+
+artaxsql=open("artaxis.sql", "w")
+print("drop table if exists artaxis;",file=artaxsql)
+print("create table artaxis (",file=artaxsql)
+print("\tcat_id int,",file=artaxsql)
+print("\tcat_name varchar(30),",file=artaxsql)
+print("\tbrnd_id int,",file=artaxsql)
+print("\tbrnd_name varchar(30),",file=artaxsql)
+print("\tpostext varchar(60),",file=artaxsql)
+print("\tpos_id varchar(30),",file=artaxsql)
+print("\tparent_id varchar(30));",file=artaxsql)
+print(".mode tabs",file=artaxsql)
+print(".import artaxis.txt artaxis",file=artaxsql)
+print(".headers on",file=artaxsql)
+print("select * from artaxis limit 10;",file=artaxsql)
+artaxsql.close()
