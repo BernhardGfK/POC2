@@ -21,7 +21,7 @@ and w.household_id=t.household_id
 and w.standard=1;
 
 create temporary table avg_weights as (
-select household_id, sum(weight)/(select (unix_datetime(max(to_date))/3600/24-unix_datetime(min(from_date))/3600/24+1)/7 as weeks from weights where standard=1) as avg_weight
+select household_id, sum(weight)/(select (unix_timestamp(max(to_date))/3600/24-unix_timestamp(min(from_date))/3600/24+1)/7 as weeks from weights where standard=1) as avg_weight
 from weights
 where standard=1
 group by household_id);

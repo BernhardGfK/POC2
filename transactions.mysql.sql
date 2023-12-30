@@ -18,14 +18,14 @@ select household_id, max(valid_date) max_valid_date
 from households
 group by household_id);
 
-create temporary table hh as (
-select household_id, bdl_id, age_id
+create temporary table hhvalid as (
+select h.household_id, h.bdl_id, h.age_id
 from households h, hh_max_valid hmv
 where h.household_id=hmv.household_id
 and h.valid_date=hmv.max_valid_date);
 
 select h.postext, count(*) tran_unwgt, sum(w.weight*brand_factor) tran_wgt
-from weights w, purchases p, hhaxis h, hh
+from weights w, purchases p, hhaxis h, hhvalid hh
 where p.pur_date between w.from_date and w.to_date
 and w.household_id=p.household_id
 and hh.household_id=p.household_id
@@ -35,7 +35,7 @@ and w.standard=1
 group by h.postext;
 
 select h.postext, aa.postext, count(*) tran_unwgt, sum(w.weight*brand_factor) tran_wgt
-from weights w, purchases p, hhaxis h, hh, artaxis aa
+from weights w, purchases p, hhaxis h, hhvalid hh, artaxis aa
 where p.pur_date between w.from_date and w.to_date
 and w.household_id=p.household_id
 and hh.household_id=p.household_id
