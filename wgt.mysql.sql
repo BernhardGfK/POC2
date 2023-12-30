@@ -5,5 +5,5 @@ create table weights (
 	to_date date,
 	weight float,
 	standard int);
-load data infile 'wgt.txt' into table weights;
+load data local infile 'wgt.txt' into table weights;
 select * from weights limit 10;
