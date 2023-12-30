@@ -30,10 +30,11 @@ for byear in range(2017, 2020):
             else:
                 semonth=1
             for emonth in range(semonth, 13):
-                begin=str(byear)+"-"+str(bmonth)+"-01"
-                end=calendar.monthrange(eyear, emonth)[1]
-                end=str(eyear)+"-"+str(emonth)+"-"+str(end)
+                begin="{:4d}-{:02d}-{:02d}".format(byear, bmonth, 1)
+                endd=calendar.monthrange(eyear, emonth)[1]
+                end="{:4d}-{:02d}-{:02d}".format(eyear, emonth, endd)
                 print(begin, end)
+                s=0
                 w={}
                 for j in range(0, hhnr):
                     w[j]=random.uniform(0, 1)
@@ -42,3 +43,16 @@ for byear in range(2017, 2020):
                     print(firsthhid+j, begin, end, w[j]/s, 0, sep='\t', file=filewgts)
 filewgts.close()
 
+wgtsql=open("wgt.sql", "w")
+print("drop table if exists weights;", file=wgtsql)
+print("create table weights (", file=wgtsql)
+print("\thousehold_id int,", file=wgtsql)
+print("\tfrom_date text,", file=wgtsql)
+print("\tto_date text,", file=wgtsql)
+print("\tweight float,", file=wgtsql)
+print("\tstandard int);", file=wgtsql)
+print(".mode tabs", file=wgtsql)
+print(".import wgt.txt weights", file=wgtsql)
+print(".headers on", file=wgtsql)
+print("select * from weights limit 10;", file=wgtsql)
+wgtsql.close()
