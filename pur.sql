@@ -1,7 +1,7 @@
 drop table if exists purchases;
 create table purchases (
     rec_id int,
-	panel_id,
+	panel_id int,
 	household_id int,
 	pur_date text,
 	shop_id int,
