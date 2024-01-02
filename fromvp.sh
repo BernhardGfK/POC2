@@ -53,6 +53,19 @@ go
 INPUT
 }
 
+maxhhid()
+{
+vsql -d -H -s " " << INPUT | formsql
+select min(w.object_id) min_hh_id, max(w.object_id) max_hh_id
+from weight_2 w, weight_info wi
+where w.period_id=wi.period_id
+and wi.panel_id=274
+and wi.from_date <= `dat2int 31.12.2018`
+and wi.to_date >= `dat2int 1.1.2017`
+go
+INPUT
+}
+
 hh()
 {
 vsql << INPUT | sed 's/^	//;s/	$//;s/ //g'
@@ -215,10 +228,11 @@ INPUT
 }
 
 caphh=8320700
-purchases > pur.txt
-weights > wgt.txt
-hhaxis > hhaxis.txt
-artaxis > artaxis.txt
+caphh=64207768
+purchases 
+weights
+hhaxis | sort | iconv -f iso-8859-1 -t utf-8 > hhaxis.txt
+artaxis | sort | iconv -f iso-8859-1 -t utf-8 > artaxis.txt
 
 rm hh.txt
 for year in 2017 2018
@@ -227,4 +241,23 @@ do
 	do
 		hh `dat2int 01.$month.$year`  | sed 's/$/	'$year'-'$month'-01/' >> hh.txt
 	done
+done
+
+ARES_PORT=3306
+ARES_SERVER=atr-db01
+ARES_USER=admin
+ARES_DATABASE=bdschi_poc2
+ARES_PASSWORD=Phobos_27
+
+for sql in hh.sql wgt.sql pur.sql hhaxis.sql artaxis.sql
+do
+	sed -f sqlite2mysql.sed $sql | mysql -t --default-character-set=utf8 -h$ARES_SERVER -P$ARES_PORT -u$ARES_USER -p$ARES_PASSWORD $ARES_DATABASE
+done
+
+mysql -t --default-character-set=utf8 -h$ARES_SERVER -P$ARES_PORT -u$ARES_USER -p$ARES_PASSWORD $ARES_DATABASE < mysql/indices.sql
+
+for stm in transactions.sql trips.sql buyers.sql
+do
+    echo "Executing: " $stm
+	mysql -t --default-character-set=utf8 -h$ARES_SERVER -P$ARES_PORT -u$ARES_USER -p$ARES_PASSWORD $ARES_DATABASE < mysql/`basename $stm .sql`.mysql.sql
 done
