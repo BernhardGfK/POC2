@@ -35,7 +35,7 @@ for validdate in ("2017-01-01", "2018-01-01", "2019-01-01"):
                 s+=hhfeat[i][val]
                 if s>=vp:
                     break
-            print("\ti: ", i, "val: ", val)
+            #print("\ti: ", i, "val: ", val)
             print(val, file=hhfile, end='\t')
         print(validdate, file=hhfile)
 hhfile.close()

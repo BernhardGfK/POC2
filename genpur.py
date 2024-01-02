@@ -50,7 +50,7 @@ for i in range(0, config.artcnt):
             if s>=vp:
                 break
         article[ifeat]=val
-        print("article %d: %d %d" % (i, ifeat, val))
+        #print("article %d: %d %d" % (i, ifeat, val))
         #article volume
     article[-1]=round(2**random.uniform(-1,4),3)
     articles.append(article)
@@ -76,7 +76,7 @@ for i in range(0, config.hhnr):
         print(vol, end='\t', file=purfile)
         for j in range(0, config.artfeatnr):
             if j in article:
-                print("%d %d\n" % (j, article[j]))
+                #print("%d %d\n" % (j, article[j]))
                 print(article[j], end='\t', file=purfile)
             else:
                 print("NULL", end='\t', file=purfile)
