@@ -34,7 +34,7 @@ and s.col_9=ab.object_id and s.col_3 between ab.from_date and ab.to_date
 and s.panel_id in (select source_panel_id from rep_pan_definition where target_panel_id=274)
 and s.col_3 between `dat2int 1.1.2017` and `dat2int 31.12.2018`
 and s.col_1=9 and s.col_2=0 and s.deleted=0
-and s.col_4 < 8320700
+and s.col_4 < $caphh
 go
 INPUT
 }
@@ -48,7 +48,7 @@ where w.period_id=wi.period_id
 and wi.panel_id=274
 and wi.from_date <= `dat2int 31.12.2018`
 and wi.to_date >= `dat2int 1.1.2017`
-and w.object_id < 8320700
+and w.object_id < $caphh
 go
 INPUT
 }
@@ -64,7 +64,7 @@ and $1 between r.from_date and r.to_date
 and $1 between abdl.from_date and abdl.to_date
 and $1 between aage.from_date and aage.to_date
 and r.panel_id=274
-and r.object_id < 8320700
+and r.object_id < $caphh
 go
 INPUT
 }
@@ -214,11 +214,11 @@ and to_date >= from_date
 INPUT
 }
 
-#purchases
-#weights
+caphh=8320700
+purchases > pur.txt
+weights > wgt.txt
 hhaxis > hhaxis.txt
 artaxis > artaxis.txt
-exit
 
 rm hh.txt
 for year in 2017 2018
